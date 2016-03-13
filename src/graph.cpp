@@ -67,6 +67,11 @@ int shortest_path(const graph_t& g, uint32_t u, uint32_t v) {
       break;
     }
 
+    it = g.find(m);
+    if (it == g.end()) {
+      continue;
+    }
+
     for (auto n : g.at(m)) {
       uint32_t d1 = d[m];
       
