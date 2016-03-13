@@ -10,4 +10,4 @@ cd ${DIR}/test-harness
 make harness
 
 # then test the executable
-./harness init-file.txt workload-file.txt result-file.txt ../src/apsp.py
+./harness init-file.txt workload-file.txt result-file.txt ../src/sigmod16

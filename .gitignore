@@ -1,7 +1,8 @@
 .DS_Store
-solution
+sigmod16
 harness
 *.dSYM/
+*.swp
 
 # Compiled Object files
 *.slo
