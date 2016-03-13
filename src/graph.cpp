@@ -48,51 +48,73 @@ void delete_edge(graph_t& g, uint32_t u, uint32_t v) {
                   neighbors.end());
 }
 
-int shortest_path(const graph_t& g, uint32_t u, uint32_t v) {
+int shortest_path(const graph_t& g, const graph_t& g_r, uint32_t u, uint32_t v) {
   // check if u exists and has outgoing edges
   auto it = g.find(u);
   if (it == g.end() || (it->second).size() == 0)
     return -1;
 
-  // find shortest path distance from u to v with a DFS
-  stack<uint32_t> s;
-  unordered_map<uint32_t,uint32_t> d;
-  s.push(u);
-  d[u] = 0;
-  while (!s.empty()) {
-    uint32_t m = s.top();
-    s.pop();
+  // check if v exists and has incoming edges
+  it = g_r.find(v);
+  if (it == g_r.end() || (it->second).size() == 0)
+    return -1;
 
-    if (m == v) {
-      break;
-    }
+  // find shortest path distance from u to v with a bidi-BFS
+  vector<uint32_t> f {u}; // forward fringe
+  vector<uint32_t> r {v}; // reverse fringe
+  unordered_map<uint32_t,bool> visited_f;
+  unordered_map<uint32_t,bool> visited_r;
+  visited_f[u] = true;
+  visited_r[v] = true;
 
-    it = g.find(m);
-    if (it == g.end()) {
-      continue;
-    }
-
-    for (auto n : g.at(m)) {
-      uint32_t d1 = d[m];
-      
-      auto d_n = d.find(n);
-      uint32_t d2;
-      if (d_n == d.end())
-        d2 = numeric_limits<uint32_t>::max();
-      else
-        d2 = d_n->second;
-      
-      if (d1 + 1 < d2) {
-        d[n] = d1 + 1;
-        s.push(n);
+  int path_length_f = 0;
+  int path_length_r = 0;
+  while (f.size() > 0 && r.size() > 0) {
+    if (f.size() <= r.size()) {
+      // expand the forward fringe
+      /*cout << "f: ";
+      for (uint32_t i : f)
+        cout << i << " ";
+      cout << endl;*/
+      path_length_f++;
+      auto this_level = move(f); // f is now empty
+      for (auto node : this_level) {
+        if (g.find(node) == g.end())
+          continue;
+        for (auto neighbor : g.at(node)) {
+          if (!visited_f[neighbor]) {
+            f.push_back(neighbor);
+            visited_f[neighbor] = true;
+          }
+          if (visited_r[neighbor]) {
+            return path_length_f + path_length_r;
+          }
+        }
+      }
+    } else {
+      /*cout << "r: ";
+      for (uint32_t i : r)
+        cout << i << " ";
+      cout << endl;*/
+      path_length_r++;
+      auto this_level = move(r);
+      for (auto node : this_level) {
+        if (g_r.find(node) == g_r.end())
+          continue;
+        for (auto neighbor : g_r.at(node)) {
+          if (!visited_r[neighbor]) {
+            r.push_back(neighbor);
+            visited_r[neighbor] = true;
+          }
+          if (visited_f[neighbor]) {
+            return path_length_f + path_length_r;
+          }
+        }
       }
     }
   }
 
-  auto d_v = d.find(v);
-  if (d_v == d.end())
-    return -1;
-  return d_v->second;
+  return -1;
 }
 
 } // namespace std

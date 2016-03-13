@@ -18,7 +18,7 @@ graph_t construct_graph(const vector<edge_t>& edges);
 void    print_graph(const graph_t& g);
 void    add_edge(graph_t& g, uint32_t u, uint32_t v);
 void    delete_edge(graph_t& g, uint32_t u, uint32_t v);
-int     shortest_path(const graph_t& g, uint32_t u, uint32_t v);
+int     shortest_path(const graph_t& g, const graph_t& g_r, uint32_t u, uint32_t v);
 
 } // namespace std
 
