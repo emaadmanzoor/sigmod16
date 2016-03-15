@@ -1,6 +1,7 @@
 .DS_Store
 sigmod16
 harness
+submission.tar.gz
 *.dSYM/
 *.swp
 
