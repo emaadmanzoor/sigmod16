@@ -3,6 +3,7 @@
  * License: Apache License, Version 2.0
  * https://github.com/emaadmanzoor/sigmod16
  */
+#include <algorithm>
 #include <iostream>
 #include <limits>
 #include <stack>
